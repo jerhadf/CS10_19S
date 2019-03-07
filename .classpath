@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="Class Files"/>
+	<classpathentry kind="src" path="Problem Sets"/>
+	<classpathentry kind="src" path="Other"/>
+	<classpathentry kind="src" path="SA0"/>
+	<classpathentry kind="src" path="SA1"/>
+	<classpathentry kind="lib" path="C:/Users/Guest User/Downloads/javacv-1.2-bin/javacv-bin/javacpp.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Guest User/Downloads/javacv-1.2-bin/javacv-bin/javacv.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Guest User/Downloads/javacv-1.2-bin/javacv-bin/opencv-windows-x86_64.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
