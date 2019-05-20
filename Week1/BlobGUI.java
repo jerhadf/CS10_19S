@@ -17,7 +17,7 @@ public class BlobGUI extends DrawingGUI {
 		super("Animated Blob", width, height); //set up graphics "world"
 	
 		// Create blob.
-		blob = new Blob(width/2, height/2);  // What happens if this isn't here? Try it so you see the symptom.
+		this.blob = new Blob(width/2, height/2);  // What happens if this isn't here? Try it so you see the symptom.
 		
 		// Timer drives the animation.
 		setTimerDelay(delay);
@@ -27,6 +27,9 @@ public class BlobGUI extends DrawingGUI {
 	public void createBlob(int x, int y) {
 		if (blobType=='0') {
 			blob = new Blob(x,y);
+		}
+		if (blobType == 'x') { 
+			blob = new PurposefulWanderer(x, y);
 		}
 		else if (blobType=='b') {
 			blob = new Bouncer(x,y,width,height);

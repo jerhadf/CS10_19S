@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="Class Files"/>
-	<classpathentry kind="src" path="Problem Sets"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="src" path="Other"/>
 	<classpathentry kind="src" path="SA0"/>
 	<classpathentry kind="src" path="SA1"/>
+	<classpathentry kind="src" path="SA1.5"/>
+	<classpathentry kind="src" path="Week1"/>
+	<classpathentry kind="src" path="Week2"/>
+	<classpathentry kind="src" path="Week3"/>
+	<classpathentry kind="src" path="Week4"/>
+	<classpathentry kind="src" path="Week5"/>
+	<classpathentry kind="src" path="SA3"/>
+	<classpathentry kind="src" path="Recitation"/>
+	<classpathentry kind="src" path="SA4"/>
+	<classpathentry kind="src" path="PS1"/>
+	<classpathentry kind="src" path="SA5"/>
+	<classpathentry kind="src" path="PS2"/>
+	<classpathentry kind="src" path="SA6"/>
+	<classpathentry kind="src" path="PS3"/>
+	<classpathentry kind="src" path="Week6"/>
+	<classpathentry kind="src" path="SA7"/>
+	<classpathentry kind="src" path="inputs"/>
+	<classpathentry kind="src" path="PS4"/>
+	<classpathentry kind="src" path="Week8"/>
+	<classpathentry kind="src" path="PS5"/>
 	<classpathentry kind="lib" path="C:/Users/Guest User/Downloads/javacv-1.2-bin/javacv-bin/javacpp.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Guest User/Downloads/javacv-1.2-bin/javacv-bin/javacv.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Guest User/Downloads/javacv-1.2-bin/javacv-bin/opencv-windows-x86_64.jar"/>
+	<classpathentry kind="src" path="Problem Sets"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
