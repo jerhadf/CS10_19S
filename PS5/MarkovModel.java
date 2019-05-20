@@ -440,89 +440,6 @@ public class MarkovModel {
 					loadedWordList.clear();
 				}
 			}
-				
-			//---------------------------------------------------//
-			// Code here for running on words and keys from current loop
-			
-			// TODO: Vitterbi decoding
-			
-//			/**
-//			 *  currStates = { start }
-//			 *	currScores = map { start=0 }
-//			 *
-//			 *	for i from 0 to # observations - 1
-//			 *	  nextStates = {}
-//			 *	  nextScores = empty map
-//			 *
-//			 *	  for each currState in currStates
-//			 *	    for each transition currState -> nextState
-//			 *	      add nextState to nextStates
-//			 *
-//			 *	      nextScore = currScores[currState] +                       // path to here
-//			 *	                  transitionScore(currState -> nextState) +     // take a step to there
-//			 *	                  observationScore(observations[i] in nextState) // make the observation there
-//			 *
-//			 *	      if nextState isn't in nextScores or nextScore > nextScores[nextState]
-//			 *	        set nextScores[nextState] to nextScore
-//			 *	        remember that pred of nextState @ i is curr -> backtrace
-//			 *
-//			 *	  currStates = nextStates
-//			 *	  currScores = nextScores
-//			 */
-//			int count = 0;
-//			
-//			for (int i = 0; i < observationNum; i++) {
-//				Set<String> nextStates = new HashSet<String>();
-//				HashMap<String, Double> nextScores = new HashMap<String, Double>();
-//				
-//				System.out.println(count++);
-//				
-//				for (String currState : currStates) {
-//					for (String nextState : transitionMap.keySet()) {
-//						if (endOfSentence.contains(nextState)){
-//							continue;
-//						}
-//						nextStates.add(nextState);
-//						
-//						Double nextScore;
-//						
-//						if (transitionMap.get(nextState).get(currState) != null) {
-//							nextScore = currScores.get(currState) + transitionMap.get(nextState).get(currState);// + emissionMap.get(loadedWordList.get(i));
-//						} else {
-//							nextScore = currScores.get(currState) + unseenPenalty;
-//						}
-//						
-////						System.out.println(nextState);
-////						System.out.println(currState);
-//						System.out.println(currState + " -> " + nextState + ": " + nextScore);
-//						System.out.println();
-//						
-//						if (!nextScores.containsKey(nextState) || nextScore > nextScores.get(nextState)) {
-//							nextScores.put(nextState, nextScore);
-//							
-//							HashMap<String, String> tempMap = new HashMap<String, String>();
-//							tempMap.put(nextState, currState);
-//							
-//							backTrace.add(i, tempMap);
-//							// TODO: remember that pred of nextState @ i is curr (backtrace)
-//						}
-//					}
-//				}
-//				
-//				currStates = nextStates;
-//				currScores = nextScores;
-//				
-////				System.out.println("currStates: " + currStates);
-////				System.out.println("currScores: " + currScores);
-//				System.out.println(backTrace.get(i));
-//				System.out.println();
-//			}
-//			
-//			System.out.println("Backtrace: " + backTrace);
-//			
-//			textReader.close();
-//			
-//			// TODO: Read backtrace
 			
 		} catch (Exception e) {
 			System.err.println("Error while loading system maps... — " + e.getMessage());
@@ -530,6 +447,77 @@ public class MarkovModel {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Applies the vitterbi algorithm
+	 * 
+	 * @param wordList — a list of words parsed in from the file
+	 * @return — a list of tags
+	 */
+	public List<Map<String, String>> vitterbiAlgorithm(List<String> wordList) {
+		// backtrack list holds all the options that led to the final conclusion
+		List<Map<String, String>> backTrace = new ArrayList<Map<String, String>>();
+		
+		// the toal number of observations
+		int observationNum = wordList.size();
+		
+		// Initialize data holders for algorithm
+		List<String> currStates = new ArrayList<String>();
+		currStates.add(startString); // hashtag represents the starting point
+		
+		HashMap<String, Double> currScores = new HashMap<String, Double>();
+		currScores.put(startString, 0.0);
+		
+		// loop through the observations 
+		for (int i = 0; i < observationNum; i++) {
+			List<String> nextStates = new ArrayList<String>(); // keeps track of next possible states
+			HashMap<String, Double> nextScores = new HashMap<String, Double>(); // keeps track of next possible scores
+			
+			for (String currState : currStates) {
+				
+				for (String nextState : transitionMap.get(currState).keySet()) {
+					
+					nextStates.add(nextState); // add each possible state to the next state map
+					
+					// get the current score
+					Double currScore = currScores.get(currState); 
+					// get the transition score between the current state and the next one
+					Double tranScore = transitionMap.get(currState).get(nextState); 
+					// observation and next scores are empty initially
+					Double obsvScore; // the observation score
+					Double nextScore; // the next score, calculated below
+					
+					// !TODO is this right? should we be using nextState here?
+					if (transitionMap.get(currState).containsKey(wordList.get(i))) { 
+						obsvScore = transitionMap.get(nextState).get(wordList.get(i));
+					} else {
+						obsvScore = unseenPenalty; // apply the penalty for not finding the item
+					}
+					
+					// calculate the next store
+					nextScore = currScore + tranScore + obsvScore;
+					
+					// check the map of next scores for this state; if it isn't found or it has a better score, add it to the map
+					if (!nextScores.containsKey(nextState) || nextScore > nextScores.get(nextState)) {
+						nextScores.put(nextState, nextScore); 
+						HashMap<String, String> blankMap = new HashMap<String,String>();
+						
+						// if we haven't initialized the backtrace map yet, insert the blank map
+						if (backTrace.size() <= i) backTrace.add(i, blankMap);
+						
+						// add the next and current states to the backtrack map
+						backTrace.get(i).put(nextState, currState);
+
+					}
+				}
+			}
+			
+			currStates = nextStates;
+			currScores = nextScores;
+		}
+		
+		return backTrace;
 	}
 	
 	/**
