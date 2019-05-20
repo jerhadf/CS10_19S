@@ -32,7 +32,7 @@ public class TestModel {
 //		System.out.println(m.getlabelToText());
 //		System.out.println();
 		
-		m.vitterbi("PS-5/texts/simple-test-sentences.txt");
+		
 	}
 
 }

@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -94,39 +95,12 @@ public class MarkovModel {
 	}
 	
 	/**
-	 * Convert a given string into a list of words or tags
-	 * @return
-	 */
-	public ArrayList<String> parseLine(String lineString) {
-		
-		ArrayList<String> lineWords = new ArrayList<String>();
-		String currWord = "";
-		
-		// Process line char by char
-		for (int i = 0; i < lineString.length(); i++){
-		    char c = lineString.charAt(i);
-		    
-		    // Remove all unwanted characters
-		    if (charsToIgnore.contains(c) || endOfSentence.contains(Character.toString(c))) {
-		    	if (currWord.length() > 0) {
-			    	lineWords.add(currWord.toLowerCase());
-			    	currWord = "";
-		    	}
-		    	continue;
-		    }
-		    
-		    currWord += c;
-		}
-		System.out.println(lineWords);
-		return lineWords;
-	}
-	
-	/**
 	 * Convert a given file into a list of lines (in the form of a list of strings)
 	 * @param filePath
 	 * @return
 	 */
 	public ArrayList<ArrayList<String>> parseFile(String filePath){
+		// the list of all lines in the file, where each line is a list of words
 		ArrayList<ArrayList<String>> fileList = new  ArrayList<ArrayList<String>>();
 		
 		int lineIndex = 0;	// Which line is the program on?
@@ -167,6 +141,36 @@ public class MarkovModel {
 		
 		return fileList;
 	}
+	
+	/**
+	 * Helper method for parseFile
+	 * Convert a given string into a list of words or tags
+	 * @return
+	 */
+	private ArrayList<String> parseLine(String lineString) {
+		
+		ArrayList<String> lineWords = new ArrayList<String>();
+		String currWord = "";
+		
+		// Process line char by char
+		for (int i = 0; i < lineString.length(); i++){
+		    char c = lineString.charAt(i);
+		    
+		    // Remove all unwanted characters
+		    if (charsToIgnore.contains(c) || endOfSentence.contains(Character.toString(c))) {
+		    	if (currWord.length() > 0) {
+			    	lineWords.add(currWord.toLowerCase());
+			    	currWord = "";
+		    	}
+		    	continue;
+		    }
+		    
+		    currWord += c;
+		}
+		System.out.println(lineWords);
+		return lineWords;
+	}
+	
 	
 	/**
 	 * Generate maps
@@ -371,160 +375,6 @@ public class MarkovModel {
 	}
 	
 	/**
-	 * A method to perform Viterbi decoding to find the best sequence of tags for a line (sequence of words).
-	 * @param line — the line being read
-	 * @return — a list of Strings representing the series of best tags for a given line
-	 */
-	public Map<String, HashMap<String, String>> vitterbi(String readTextLocation) {
-		// TODO Test this method on simple hard-coded graphs and input strings 
-		// (e.g., from programming drill, along with others you make up). 
-		// In your report, discuss the tests and how they convinced you of your code's correctness.
-		
-		try {
-			// Readers for reading text and label data from file
-			BufferedReader textReader = new BufferedReader(new FileReader(readTextLocation));
-			
-			// Initialize the holder variables for read() function
-			// (reading in char by char)
-			int currTextInt = textReader.read(); 		// returns -1 if get to end of file
-			
-			int observationNum = 0;		// How many words has the program read?
-			
-			// Initialize data holders for algorithm
-			List<String> currStates = new ArrayList<String>();
-			currStates.add(startString);
-			
-			HashMap<String, Double> currScores = new HashMap<String, Double>();
-			currScores.put(startString, 0.0);
-			
-			// List of words
-			List<String> loadedWordList = new LinkedList<String>();
-			
-			// Backtrace map
-			Map<Double, HashMap<String, String>> backTrace = new HashMap<Double, HashMap<String, String>>();
-			
-			// Parse the text file (main processing loop)
-			while (currTextInt != -1) { // as long as we have not reached end of file (nextLine = -1)
-				
-				// Current word or label reading
-				String currTextString = "";
-				
-				// Load the current word into string
-				while (currTextInt != -1) {
-					if (charsToIgnore.contains((char) currTextInt)) {
-						break;					
-					}
-					currTextString += (char) currTextInt;
-					currTextInt = textReader.read();
-				}
-				
-				// Ignore all ' ' or '\n' characters for text
-				while (charsToIgnore.contains((char) currTextInt)) {
-					currTextInt = textReader.read();
-				}
-				
-				// Check if the sentence has ended
-				if (!endOfSentence.contains((Character.toString((char) currTextInt)))) {
-					System.out.println("sentence not ended...");
-					// Add to stack of words loaded
-					loadedWordList.add(currTextString);
-					
-					observationNum++;	// Increase the count of words that the program has seen
-				}
-				
-				// If so, run vitterbi algorithm
-				else {
-					System.out.println("sentence ended... running vitterbi...");
-					/**
-					 *  currStates = { start }
-					 *	currScores = map { start=0 }
-					 *
-					 *	for i from 0 to # observations - 1
-					 *	  nextStates = {}
-					 *	  nextScores = empty map
-					 *
-					 *	  for each currState in currStates
-					 *	    for each transition currState -> nextState
-					 *	      add nextState to nextStates
-					 *
-					 *	      nextScore = currScores[currState] +                       // path to here
-					 *	                  transitionScore(currState -> nextState) +     // take a step to there
-					 *	                  observationScore(observations[i] in nextState) // make the observation there
-					 *
-					 *	      if nextState isn't in nextScores or nextScore > nextScores[nextState]
-					 *	        set nextScores[nextState] to nextScore
-					 *	        remember that pred of nextState @ i is curr -> backtrace
-					 *
-					 *	  currStates = nextStates
-					 *	  currScores = nextScores
-					 */
-					for (int i = 0; i < observationNum; i++) {
-						List<String> nextStates = new ArrayList<String>();
-						HashMap<String, Double> nextScores = new HashMap<String, Double>();
-						
-						System.out.println();
-						System.out.println(i);
-						
-						for (String currState : currStates) {
-							System.out.println(currState);
-							for (String nextState : transitionMap.get(currState).keySet()) {
-								if (endOfSentence.contains(nextState)){
-									continue;
-								}
-								nextStates.add(nextState);
-								
-								Double nextScore;
-								
-								if (transitionMap.get(currState).containsKey(nextState)) {
-									nextScore = currScores.get(currState) + transitionMap.get(currState).get(nextState);
-											//+ observationMap.get(nextState).get(loadedWordList.get(i));
-								} else {
-									nextScore = currScores.get(currState) + unseenPenalty;
-								}
-								
-								if (!nextScores.containsKey(nextState) || nextScore > nextScores.get(nextState)) {
-									nextScores.put(nextState, nextScore);
-									
-									HashMap<String, String> tempMap = new HashMap<String, String>();
-									tempMap.put(nextState, currState);
-									
-									backTrace.put(new Double(i), tempMap);
-									// TODO: remember that pred of nextState @ i is curr (backtrace)
-								}
-							}
-						}
-						
-						currStates = nextStates;
-						currScores = nextScores;
-					}
-					
-					System.out.println("Backtrace: " + backTrace);
-					
-					textReader.close();
-					
-					// TODO: Read backtrace
-					
-					// Reset algorithm
-					currScores.clear();
-					currScores.put(startString, 0.0);
-					
-					currStates.clear();
-					currStates.add(startString);
-					
-					observationNum = 0;
-					loadedWordList.clear();
-				}
-			}
-			
-		} catch (Exception e) {
-			System.err.println("Error while loading system maps... — " + e.getMessage());
-			e.printStackTrace();
-		}
-		
-		return null;
-	}
-	
-	/**
 	 * Applies the vitterbi algorithm
 	 * 
 	 * @param wordList — a list of words parsed in from the file
@@ -578,7 +428,7 @@ public class MarkovModel {
 						nextScores.put(nextState, nextScore); 
 						HashMap<String, String> blankMap = new HashMap<String,String>();
 						
-						// if we haven't initialized the backtrace map yet, insert the blank map
+						// if we haven't initialized the back-trace map yet, insert the blank map
 						if (backTrace.size() <= i) backTrace.add(i, blankMap);
 						
 						// add the next and current states to the backtrack map
