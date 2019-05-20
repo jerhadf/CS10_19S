@@ -503,7 +503,7 @@ public class MarkovModel {
 	public void consoleTestModel() {
 		Scanner s = new Scanner(System.in);
 		String readLine = "";
-		List<Map<String, String>> vOut;
+		List<String> vOut;
 		
 		System.out.println("Enter a sentence to tag words...");
 		System.out.println("Press \"q\" to quit the method...");
@@ -522,14 +522,20 @@ public class MarkovModel {
 			System.out.println("You printed... " + readLine);
 			
 			// Get tags from sentence
-			vOut = this.vitterbiAlgorithm(parseLine(readLine));		// TODO: Check for implementation accuracy
+			System.out.println(parseLine(readLine));
+			vOut = vitterbiAlgorithm(parseLine(readLine));		// TODO: Check for implementation accuracy
 			
-			System.out.println("The tags for your sentence are... " + vOut);
+			// TODO: Finalize tag output
+			System.out.print("The tags for your sentence are...");
+			
+			for (String m : vOut) {
+				System.out.print(" " + m);
+			}
 		}
 	}
 	
 	/**
-	 * Write a file-based test method to evaluate the performance on a pair of test files 
+	 * Write a file-based test method to evaluate the performance on a pair of test files DONE
 	 * (corresponding lines with sentences and tags).
 	 */
 	public int fileTestModel(String wordFilePath, String tagFilePath, ArrayList<String> testString) {
@@ -541,7 +547,7 @@ public class MarkovModel {
 		int error = 0;
 		
 		for (int line = 0; line < tagFileParse.size(); line++) {	// Lines in file
-			ArrayList<String> vittResult = testString;//vitterbiAlgorithm(wordFileParse.get(line));	// TODO: Assuming vitterbi returns a list of strings
+			ArrayList<String> vittResult = testString; //vitterbiAlgorithm(wordFileParse.get(line));	// TODO: Assuming vitterbi returns a list of strings
 			
 			// Loop through all tag pairs in in tag file and in vitterbi algoritm from wordfile
 			for (int tag = 0; tag < vittResult.size(); tag++) {		// Words in line
