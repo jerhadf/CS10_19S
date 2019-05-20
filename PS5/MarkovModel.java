@@ -379,8 +379,28 @@ public class MarkovModel {
 		}
 	}
 	
+	
+	
 	/**
-	 * Applies the vitterbi algorithm
+	 * Applies the Vitterbi algorithm and then finds the highest-score path
+	 * 
+	 * @param wordList - a list of words (e.g. a sentence)
+	 * @return
+	 */
+	public List<String> vitterbi(List<String> wordList) {
+		return findHighScore(vitterbiAlgorithm(wordList));
+	}
+	
+	
+	/**
+	 * Finds the highest-score backtrace
+	 */
+	public List<String> findHighScore(List<Map<String, String>> backtrace) {
+		return null;
+	}
+	
+	/**
+	 * Applies the Vitterbi algorithm to a list of words and returns a list of POS tags
 	 * 
 	 * @param wordList a list of words parsed in from the file
 	 * @return a list of tags
@@ -451,50 +471,7 @@ public class MarkovModel {
 			currScores = nextScores; // increment scores to next scores for iteration
 		}
 		
-		
-		// find the best score in the backtrace map, and then return that score's backtrace
-
-		System.out.println("BACKTRACE: " + backTrace);
-		Double maxScore = 10000000.0; // used for comparison
-		String state = "placeholder";
-		
-		// loop over all codes in the last reference of current scores
-		for (String code : backTrace.get(backTrace.size()).keySet()) {
-			// if found a better score, update the temporary variables for score and state
-			if (Math.abs(currScores.get(code)) < maxScore) {
-				maxScore = currScores.get(code);
-				state = code;
-			}
-		}
-		
-		// create temporary variables for that code's backpointer
-		String first = "placeholder";
-		String second = "placeholder";
-		
-		// loop over all codes in just the last map in the list
-		for (String code : backTrace.get(backTrace.size()-1).keySet()) {
-			// if found the state we determined best, set first and second to its values
-			if (code == state) {
-				first = code;
-				second = backTrace.get(backTrace.size()-1).get(code);
-			}
-		}
-		
-		// reset the last element in the backtrack list to an empty map, then only add the first and second (for what we determined is best score)
-		backTrace.set(backTrace.size()-1, new HashMap<String,String>());
-		backTrace.get(backTrace.size()-1).put(first, second);
-		
-		// NEED TO RETURN AN ARRAYLIST OF PARTS OF SPEECH
-		
 		return backTrace;
-	}
-	
-	/**
-	 * Write a method to train a model (observation and transition probabilities) 
-	 * on corresponding lines (sentence and tags) from a pair of training files.
-	 */
-	public void trainModel() {
-		
 	}
 	
 	/**
@@ -523,7 +500,7 @@ public class MarkovModel {
 			
 			// Get tags from sentence
 			System.out.println(parseLine(readLine));
-			vOut = vitterbiAlgorithm(parseLine(readLine));		// TODO: Check for implementation accuracy
+			vOut = vitterbi(parseLine(readLine));		// TODO: Check for implementation accuracy
 			
 			// TODO: Finalize tag output
 			System.out.print("The tags for your sentence are...");
@@ -547,7 +524,8 @@ public class MarkovModel {
 		int error = 0;
 		
 		for (int line = 0; line < tagFileParse.size(); line++) {	// Lines in file
-			ArrayList<String> vittResult = testString; //vitterbiAlgorithm(wordFileParse.get(line));	// TODO: Assuming vitterbi returns a list of strings
+			ArrayList<String> vittResult = testString; //vitterbiAlgorithm(wordFileParse.get(line));	
+			// TODO: Assuming vitterbi returns a list of strings
 			
 			// Loop through all tag pairs in in tag file and in vitterbi algoritm from wordfile
 			for (int tag = 0; tag < vittResult.size(); tag++) {		// Words in line
