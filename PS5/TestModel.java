@@ -31,15 +31,29 @@ public class TestModel {
 //		System.out.println(m.getTransitionMap());
 //		System.out.println(m.getlabelToText());
 //		System.out.println();
-<<<<<<< HEAD
-=======
 //		
 //		m.vitterbi("PS-5/texts/simple-test-sentences.txt");
 //		
 //		System.out.println(m.parseFile("PS-5/texts/simple-test-sentences.txt"));
+//		System.out.println(m.parseFile("PS-5/texts/simple-test-tags.txt"));
 //		System.out.println(m.parseLine("the dog saw trains in the night ."));
-		m.consoleTestModel();
->>>>>>> 6bfd4f5a4f8e9a099efd6af4c389f4d85dea05e3
+//		m.consoleTestModel();
+		
+		ArrayList<String> testArr = new ArrayList<String>();	// DET N V N P DET N
+//		testArr.add("the");
+//		testArr.add("dog");
+//		testArr.add("saw");
+//		testArr.add("trains");
+//		testArr.add("in");
+//		testArr.add("the");
+//		testArr.add("night");
+		testArr.add("det");
+		testArr.add("n");
+		testArr.add("v");
+		testArr.add("n");
+		testArr.add("p");
+		testArr.add("det");
+		testArr.add("n");
+		System.out.println(m.fileTestModel("PS-5/texts/simple-test-sentences.txt", "PS-5/texts/simple-test-tags.txt", testArr));
 	}
-
 }
