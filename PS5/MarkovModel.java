@@ -489,8 +489,26 @@ public class MarkovModel {
 	 * Write a file-based test method to evaluate the performance on a pair of test files 
 	 * (corresponding lines with sentences and tags).
 	 */
-	public void fileTestModel() {
+	public int fileTestModel(String wordFilePath, String tagFilePath, ArrayList<String> testString) {
 		
+		// Load word and tag files
+		ArrayList<ArrayList<String>> wordFileParse = parseFile(wordFilePath);
+		ArrayList<ArrayList<String>> tagFileParse = parseFile(tagFilePath);
+		
+		int error = 0;
+		
+		for (int line = 0; line < tagFileParse.size(); line++) {	// Lines in file
+			ArrayList<String> vittResult = testString;//vitterbiAlgorithm(wordFileParse.get(line));	// TODO: Assuming vitterbi returns a list of strings
+			
+			// Loop through all tag pairs in in tag file and in vitterbi algoritm from wordfile
+			for (int tag = 0; tag < vittResult.size(); tag++) {		// Words in line
+				if (!vittResult.get(tag).equals(tagFileParse.get(line).get(tag))) {
+					System.out.println("\"" + vittResult.get(tag) + "\" is not equal to \"" + tagFileParse.get(0).get(tag) + "\"");
+					error++;	// Increase error if tags aren't equal
+				}
+			}
+		}
+		return error;
 	}
 
 }
