@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * TestModel.java 
  * 
@@ -37,9 +39,7 @@ public class TestModel {
 //		System.out.println(m.parseFile("PS-5/texts/simple-test-sentences.txt"));
 //		System.out.println(m.parseFile("PS-5/texts/simple-test-tags.txt"));
 //		System.out.println(m.parseLine("the dog saw trains in the night ."));
-<<<<<<< HEAD
 		m.consoleTestModel();
-=======
 //		m.consoleTestModel();
 		
 		ArrayList<String> testArr = new ArrayList<String>();	// DET N V N P DET N
@@ -58,6 +58,5 @@ public class TestModel {
 		testArr.add("det");
 		testArr.add("n");
 		System.out.println(m.fileTestModel("PS-5/texts/simple-test-sentences.txt", "PS-5/texts/simple-test-tags.txt", testArr));
->>>>>>> 333ae9b7cd284a79f055b50f5cfd1a52f07b1152
 	}
 }
