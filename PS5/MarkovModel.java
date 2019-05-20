@@ -94,6 +94,81 @@ public class MarkovModel {
 	}
 	
 	/**
+	 * Convert a given string into a list of words or tags
+	 * @return
+	 */
+	public ArrayList<String> parseLine(String lineString) {
+		
+		ArrayList<String> lineWords = new ArrayList<String>();
+		String currWord = "";
+		
+		// Process line char by char
+		for (int i = 0; i < lineString.length(); i++){
+		    char c = lineString.charAt(i);
+		    
+		    // Remove all unwanted characters
+		    if (charsToIgnore.contains(c) || endOfSentence.contains(Character.toString(c))) {
+		    	if (currWord.length() > 0) {
+			    	lineWords.add(currWord.toLowerCase());
+			    	currWord = "";
+		    	}
+		    	continue;
+		    }
+		    
+		    currWord += c;
+		}
+		System.out.println(lineWords);
+		return lineWords;
+	}
+	
+	/**
+	 * Convert a given file into a list of lines (in the form of a list of strings)
+	 * @param filePath
+	 * @return
+	 */
+	public ArrayList<ArrayList<String>> parseFile(String filePath){
+		ArrayList<ArrayList<String>> fileList = new  ArrayList<ArrayList<String>>();
+		
+		int lineIndex = 0;	// Which line is the program on?
+		
+		try {
+			BufferedReader fileReader = new BufferedReader(new FileReader(filePath));
+			
+			int r = fileReader.read(); 		// returns -1 if get to end of file
+			String currReadString = "";
+			
+			while (r != -1) {
+				
+				// Add each char to the current string
+				currReadString += (char) r;
+				
+				// If sentence has ended, convert sentence to 
+				if (r == '\n') {
+					fileList.add(lineIndex, parseLine(currReadString));
+					currReadString = "";
+					lineIndex++;
+				}
+				
+				// Read another char
+				r = fileReader.read();
+			}
+			
+			// If the program ends without reading a line
+			if (currReadString.length() != 0) {
+				fileList.add(lineIndex, parseLine(currReadString));
+			}	
+			
+			fileReader.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return fileList;
+	}
+	
+	/**
 	 * Generate maps
 	 * @param filepath
 	 */
@@ -241,7 +316,7 @@ public class MarkovModel {
 			labelReader.close();
 			
 		} catch (Exception e) {
-			System.err.println("Error while loading system maps... — " + e.getMessage());
+			System.err.println("Error while loading system maps... â€” " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -297,8 +372,8 @@ public class MarkovModel {
 	
 	/**
 	 * A method to perform Viterbi decoding to find the best sequence of tags for a line (sequence of words).
-	 * @param line — the line being read
-	 * @return — a list of Strings representing the series of best tags for a given line
+	 * @param line â€” the line being read
+	 * @return â€” a list of Strings representing the series of best tags for a given line
 	 */
 	public Map<String, HashMap<String, String>> vitterbi(String readTextLocation) {
 		// TODO Test this method on simple hard-coded graphs and input strings 
@@ -442,7 +517,7 @@ public class MarkovModel {
 			}
 			
 		} catch (Exception e) {
-			System.err.println("Error while loading system maps... — " + e.getMessage());
+			System.err.println("Error while loading system maps... â€” " + e.getMessage());
 			e.printStackTrace();
 		}
 		
@@ -452,8 +527,8 @@ public class MarkovModel {
 	/**
 	 * Applies the vitterbi algorithm
 	 * 
-	 * @param wordList — a list of words parsed in from the file
-	 * @return — a list of tags
+	 * @param wordList â€” a list of words parsed in from the file
+	 * @return â€” a list of tags
 	 */
 	public List<Map<String, String>> vitterbiAlgorithm(List<String> wordList) {
 		// backtrack list holds all the options that led to the final conclusion
