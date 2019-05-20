@@ -457,7 +457,31 @@ public class MarkovModel {
 	 * Write a console-based test method to give the tags from an input line.
 	 */
 	public void consoleTestModel() {
+		Scanner s = new Scanner(System.in);
+		String readLine = "";
+		List<Map<String, String>> vOut;
 		
+		System.out.println("Enter a sentence to tag words...");
+		System.out.println("Press \"q\" to quit the method...");
+		
+		// Loop until user types "q"
+		while (true) {
+			readLine = s.nextLine();  // Read user input
+			
+			// If the user wants to quit the program
+			if (readLine.equals("q")) {
+				System.out.println("Quitting method...");
+				s.close();
+				break;
+			}
+			
+			System.out.println("You printed... " + readLine);
+			
+			// Get tags from sentence
+			vOut = this.vitterbiAlgorithm(parseLine(readLine));		// TODO: Check for implementation accuracy
+			
+			System.out.println("The tags for your sentence are... " + vOut);
+		}
 	}
 	
 	/**
