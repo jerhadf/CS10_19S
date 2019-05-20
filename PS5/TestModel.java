@@ -31,8 +31,6 @@ public class TestModel {
 //		System.out.println(m.getTransitionMap());
 //		System.out.println(m.getlabelToText());
 //		System.out.println();
-		
-		
 	}
 
 }
