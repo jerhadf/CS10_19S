@@ -532,8 +532,7 @@ public class MarkovModel {
 		int error = 0;
 		
 		for (int line = 0; line < tagFileParse.size(); line++) {	// Lines in file
-			ArrayList<String> vittResult = testString; //vitterbiAlgorithm(wordFileParse.get(line));	
-			// TODO: Assuming vitterbi returns a list of strings
+			ArrayList<String> vittResult = vitterbiAlgorithm(wordFileParse.get(line));
 			
 			// Loop through all tag pairs in in tag file and in vitterbi algoritm from wordfile
 			for (int tag = 0; tag < vittResult.size(); tag++) {		// Words in line

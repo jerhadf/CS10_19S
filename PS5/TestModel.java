@@ -21,35 +21,17 @@ public class TestModel {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		MarkovModel m = new MarkovModel("PS5/texts/simple-train-sentences.txt", "PS5/texts/simple-train-tags.txt");
-//		MarkovModel m = new MarkovModel("PS-5/texts/brown-train-sentences.txt", "PS-5/texts/brown-train-tags.txt");
-//		
-//		m.generateMaps();
-//		System.out.println(m.getTransitionMap());
-//		System.out.println(m.getlabelToText());
-//		System.out.println();
-//		
-//		m.setToLog();
-//		System.out.println(m.getTransitionMap());
-//		System.out.println(m.getlabelToText());
-//		System.out.println();
-//		
-//		m.vitterbi("PS-5/texts/simple-test-sentences.txt");
-//		
-//		System.out.println(m.parseFile("PS-5/texts/simple-test-sentences.txt"));
-//		System.out.println(m.parseFile("PS-5/texts/simple-test-tags.txt"));
-//		System.out.println(m.parseLine("the dog saw trains in the night ."));
-		m.consoleTestModel();
-//		m.consoleTestModel();
+//		MarkovModel m = new MarkovModel("PS-5/texts/simple-train-sentences.txt", "PS-5/texts/simple-train-tags.txt");
+		MarkovModel m = new MarkovModel("PS-5/texts/brown-train-sentences.txt", "PS-5/texts/brown-train-tags.txt");
 		
-		ArrayList<String> testArr = new ArrayList<String>();	// DET N V N P DET N
-//		testArr.add("the");
-//		testArr.add("dog");
-//		testArr.add("saw");
-//		testArr.add("trains");
-//		testArr.add("in");
-//		testArr.add("the");
-//		testArr.add("night");
+		m.generateMaps();
+		
+		m.setToLog();
+		
+		m.consoleTestModel();
+		
+		ArrayList<String> testArr = new ArrayList<String>();
+		
 		testArr.add("det");
 		testArr.add("n");
 		testArr.add("v");
@@ -57,6 +39,9 @@ public class TestModel {
 		testArr.add("p");
 		testArr.add("det");
 		testArr.add("n");
-		System.out.println(m.fileTestModel("PS-5/texts/simple-test-sentences.txt", "PS-5/texts/simple-test-tags.txt", testArr));
+		
+		// Finds error for each line in file
+		for (ArrayList<String> line : m.parseFile("PS-5/texts/brown-test-sentences.txt"))
+			System.out.println(m.fileTestModel("PS-5/texts/brown-test-sentences.txt", "PS-5/texts/brown-test-tags.txt", line));
 	}
 }
