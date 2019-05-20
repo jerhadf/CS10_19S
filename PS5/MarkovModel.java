@@ -410,7 +410,7 @@ public class MarkovModel {
 		// backtrack list holds all the options that led to the final conclusion
 		List<Map<String, String>> backTrace = new ArrayList<Map<String, String>>();
 		
-		// the toal number of observations
+		// the total number of observations
 		int observationNum = wordList.size();
 		
 		// Initialize data holders for algorithm
@@ -470,6 +470,14 @@ public class MarkovModel {
 			currStates = nextStates; // increment state to next state for iteration
 			currScores = nextScores; // increment scores to next scores for iteration
 		}
+		
+		// loop through currScores.keySet() (the String variables) to find the highest-score item
+		// use a String variable to hold the best option - by the time you leave you'll have the highest score item
+		
+		// iterate backwards through the wordList, and use backtrace of arrayList. 
+		// wordList.length() = length of list of maps which is backtrace. 
+		// put that in the last spot of the list of tags -- you have the best final state, and then use the backtrace 
+		// to go back and find the best tag.
 		
 		return backTrace;
 	}
