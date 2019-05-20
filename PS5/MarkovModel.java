@@ -34,13 +34,13 @@ public class MarkovModel {
 	private int numWords;
 	
 	// Penalty for an unseen word
-	private double unseenPenalty = -100;
+	private final double unseenPenalty = -100;
 	
 	// End of sentence indicator (period)
 	Set<String> endOfSentence = new HashSet<String>();
 	
 	// Graph starting signifier
-	String startString = "#";
+	private final String startString = "#";
 	
 	// The locations of input files
 	private String textFilepath; 
@@ -168,7 +168,11 @@ public class MarkovModel {
 		    
 		    currWord += c;
 		}
-		System.out.println(lineWords);
+		
+		if (currWord.length() > 0) {
+			lineWords.add(currWord);
+		}
+		
 		return lineWords;
 	}
 	
@@ -378,10 +382,11 @@ public class MarkovModel {
 	/**
 	 * Applies the vitterbi algorithm
 	 * 
-	 * @param wordList — a list of words parsed in from the file
-	 * @return — a list of tags
+	 * @param wordList a list of words parsed in from the file
+	 * @return a list of tags
 	 */
 	public List<Map<String, String>> vitterbiAlgorithm(List<String> wordList) {
+
 		// backtrack list holds all the options that led to the final conclusion
 		List<Map<String, String>> backTrace = new ArrayList<Map<String, String>>();
 		
@@ -389,7 +394,7 @@ public class MarkovModel {
 		int observationNum = wordList.size();
 		
 		// Initialize data holders for algorithm
-		List<String> currStates = new ArrayList<String>();
+		HashSet<String> currStates = new HashSet<String>();
 		currStates.add(startString); // hashtag represents the starting point
 		
 		HashMap<String, Double> currScores = new HashMap<String, Double>();
@@ -397,12 +402,15 @@ public class MarkovModel {
 		
 		// loop through the observations 
 		for (int i = 0; i < observationNum; i++) {
-			List<String> nextStates = new ArrayList<String>(); // keeps track of next possible states
+			
+			HashSet<String> nextStates = new HashSet<String>(); // keeps track of next possible states
 			HashMap<String, Double> nextScores = new HashMap<String, Double>(); // keeps track of next possible scores
 			
 			for (String currState : currStates) {
 				
-				for (String nextState : transitionMap.get(currState).keySet()) {
+				Set<String> currMap = transitionMap.get(currState).keySet();
+				
+				for (String nextState : currMap) {
 					
 					nextStates.add(nextState); // add each possible state to the next state map
 					
@@ -415,7 +423,7 @@ public class MarkovModel {
 					Double nextScore; // the next score, calculated below
 					
 					// !TODO is this right? should we be using nextState here?
-					if (transitionMap.get(currState).containsKey(wordList.get(i))) { 
+					if (transitionMap.get(nextState).containsKey(wordList.get(i))) { 
 						obsvScore = transitionMap.get(nextState).get(wordList.get(i));
 					} else {
 						obsvScore = unseenPenalty; // apply the penalty for not finding the item
@@ -439,9 +447,42 @@ public class MarkovModel {
 				}
 			}
 			
-			currStates = nextStates;
-			currScores = nextScores;
+			currStates = nextStates; // increment state to next state for iteration
+			currScores = nextScores; // increment scores to next scores for iteration
 		}
+		
+		
+		// find the best score in the backtrace map, and then return that score's backtrace
+
+		System.out.println("BACKTRACE: " + backTrace);
+		Double maxScore = 10000000.0; // used for comparison
+		String state = "placeholder";
+		
+		// loop over all codes in the last reference of current scores
+		for (String code : backTrace.get(backTrace.size()).keySet()) {
+			// if found a better score, update the temporary variables for score and state
+			if (Math.abs(currScores.get(code)) < maxScore) {
+				maxScore = currScores.get(code);
+				state = code;
+			}
+		}
+		
+		// create temporary variables for that code's backpointer
+		String first = "placeholder";
+		String second = "placeholder";
+		
+		// loop over all codes in just the last map in the list
+		for (String code : backTrace.get(backTrace.size()-1).keySet()) {
+			// if found the state we determined best, set first and second to its values
+			if (code == state) {
+				first = code;
+				second = backTrace.get(backTrace.size()-1).get(code);
+			}
+		}
+		
+		// reset the last element in the backtrack list to an empty map, then only add the first and second (for what we determined is best score)
+		backTrace.set(backTrace.size()-1, new HashMap<String,String>());
+		backTrace.get(backTrace.size()-1).put(first, second);
 		
 		return backTrace;
 	}

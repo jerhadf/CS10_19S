@@ -19,7 +19,7 @@ public class TestModel {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		MarkovModel m = new MarkovModel("PS-5/texts/simple-train-sentences.txt", "PS-5/texts/simple-train-tags.txt");
+		MarkovModel m = new MarkovModel("PS5/texts/simple-train-sentences.txt", "PS5/texts/simple-train-tags.txt");
 //		MarkovModel m = new MarkovModel("PS-5/texts/brown-train-sentences.txt", "PS-5/texts/brown-train-tags.txt");
 //		
 //		m.generateMaps();
@@ -31,15 +31,12 @@ public class TestModel {
 //		System.out.println(m.getTransitionMap());
 //		System.out.println(m.getlabelToText());
 //		System.out.println();
-<<<<<<< HEAD
-=======
 //		
 //		m.vitterbi("PS-5/texts/simple-test-sentences.txt");
 //		
 //		System.out.println(m.parseFile("PS-5/texts/simple-test-sentences.txt"));
 //		System.out.println(m.parseLine("the dog saw trains in the night ."));
 		m.consoleTestModel();
->>>>>>> 6bfd4f5a4f8e9a099efd6af4c389f4d85dea05e3
 	}
 
 }
